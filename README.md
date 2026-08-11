@@ -20,11 +20,13 @@ The service listens on `http://localhost:8000`.
 
 - Health: `GET /health`
 - OpenAPI UI: `GET /docs`
-- Monthly forecast: `POST /api/v1/forecasts/monthly`
+- Monthly forecast: `POST /api/v1/forecasts/monthly` — SARIMAX `(1,1,1)×(1,1,1,12)`
+- Daily forecast: `POST /api/v1/forecasts/daily` — SARIMAX `(1,1,1)×(1,1,1,7)`
 
-The monthly endpoint requires at least 36 contiguous historical observations
-and 1–36 contiguous future months. Future calendar and commercial-ratio values
-must be supplied by the caller.
+Monthly history: months with Actual (gaps allowed). Future: contiguous months
+after the last history month. Daily history: days with Actual (gaps allowed).
+Future: contiguous calendar days after the last history date; caller supplies
+working-day / holiday / commercial features.
 
 ## Quality checks
 
