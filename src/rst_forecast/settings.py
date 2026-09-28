@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +10,8 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     model_version: str = "sarimax-1.0"
     max_model_iterations: int = 100
+    # Shared name with rst-api. When non-empty, require matching X-API-Key except on /health.
+    api_key: str = Field(default="", validation_alias="FORECAST_API_KEY")
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -6,6 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
+from rst_forecast.auth import ApiKeyAuthMiddleware
 from rst_forecast.forecast_service import (
     ForecastInputError,
     forecast_daily,
@@ -37,9 +38,7 @@ def _preview(raw: bytes | str | None) -> str:
 class RequestResponseLoggingMiddleware(BaseHTTPMiddleware):
     """Logs HTTP method/path, request body, status, and response body."""
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         request_id = request.headers.get("X-Request-ID", str(uuid4()))
         body = await request.body()
 
@@ -96,6 +95,8 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         description="Synchronous forecasting service for the Right Sizing Tool.",
     )
+    # ApiKey first so logging (added last) remains outermost and records 401s.
+    app.add_middleware(ApiKeyAuthMiddleware, api_key=settings.api_key)
     app.add_middleware(RequestResponseLoggingMiddleware)
 
     @app.exception_handler(ForecastInputError)
