@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     model_version: str = "sarimax-1.0"
     max_model_iterations: int = 100
+    # When non-empty, require matching X-API-Key on all routes except /health.
+    api_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",

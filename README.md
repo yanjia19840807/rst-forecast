@@ -23,6 +23,12 @@ The service listens on `http://localhost:8000`.
 - Monthly forecast: `POST /api/v1/forecasts/monthly` — SARIMAX `(1,1,1)×(1,1,1,12)`
 - Daily forecast: `POST /api/v1/forecasts/daily` — SARIMAX `(1,1,1)×(1,1,1,7)`
 
+### Authentication
+
+When `RST_FORECAST_API_KEY` is set, all routes except `GET /health` require header
+`X-API-Key` with the same value. `rst-api` sends this from `FORECAST_API_KEY`.
+Leave the key blank for local development.
+
 Monthly history: months with Actual (gaps allowed). Future: contiguous months
 after the last history month. Daily history: days with Actual (gaps allowed).
 Future: contiguous calendar days after the last history date; caller supplies
